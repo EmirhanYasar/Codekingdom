@@ -5,22 +5,25 @@ import CodeMCQQuestion from "../components/CodeMCQQuestion";
 
 
 export default function Questions() {
-const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState([]);
 
+  useEffect(() => {
+    getQuestions().then(setQuestions);
+  }, []);
 
-useEffect(() => {
-getQuestions().then(setQuestions).catch(console.error);
-}, []);
+  return (
+    <div>
+      <h1>Sorular</h1>
 
+      {questions.map(q => (
+        <div key={q.id} style={{ border: "1px solid #ccc", margin: 10 }}>
+          <p><b>{q.question}</b></p>
 
-return (
-<div>
-<h1>Sorular</h1>
-{questions.map(q => {
-if (q.type === "code_write") return <CodeWriteQuestion key={q.id} data={q} />;
-if (q.type === "code_mcq") return <CodeMCQQuestion key={q.id} data={q} />;
-return null;
-})}
-</div>
-);
+          {q.type === "code_mcq" && (
+            <pre>{q.code}</pre>
+          )}
+        </div>
+      ))}
+    </div>
+  );
 }
